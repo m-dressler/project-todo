@@ -12,7 +12,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onFileSystem:project-todo"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
