@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
 
-const emptyTodo = new TextEncoder().encode(`# ${"TODOs"}
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+const emptyTodo = `# ${"TODOs"}
  - Add todos here
-`);
+`;
 
 const getTodoFileProvider = ({
   workspaceState,
@@ -12,8 +15,20 @@ const getTodoFileProvider = ({
   };
 
   return {
-    readFile: ({ path }) => workspaceState.get(path, emptyTodo),
-    writeFile: ({ path }, content) => workspaceState.update(path, content),
+    readFile: ({ path }) => {
+      const value = workspaceState.get<{ data: number[] } | string>(
+        path,
+        emptyTodo
+      );
+      // TODO this is compatibility logic for older versions of the extension
+      if (typeof value === "object") {
+        return Uint8Array.from(value.data);
+      } else {
+        return encoder.encode(value);
+      }
+    },
+    writeFile: ({ path }, content) =>
+      workspaceState.update(path, decoder.decode(content)),
     delete: ({ path }) => workspaceState.update(path, undefined),
 
     stat: () => ({
