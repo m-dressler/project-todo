@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
-const emptyTodo = new TextEncoder().encode(`#${"TODOs"}
-
+const emptyTodo = new TextEncoder().encode(`# ${"TODOs"}
  - Add todos here
 `);
 
